@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <span><b>Users List</b></span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">Row No.</div>
+                <div class="col-2">First Name</div>
+                <div class="col-2">Last Name</div>
+                <div class="col-2">User Name</div>
+                <div class="col-2">Phone</div>
+                <div class="col-2">Action</div>
+
+            </div>
+            <div class="row" *ngFor="let a of userList; let i = index">
+                <div class="col-2">{{i}}</div>
+                <div class="col-2">{{a.LastName}}</div>
+                <div class="col-2">{{a.LastName}}</div>
+                <div class="col-2">{{a.UsertName}}</div>
+                <div class="col-2">{{a.PhoneNumber}}</div>
+                <div class="col-2"><i class="fa fa-trash"></i></div>
+
+            </div>
+        </div>
+    </div>
+</div>

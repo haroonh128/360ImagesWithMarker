@@ -11,4 +11,8 @@ export class UserService {
   addUser = (data: any) => {
     return this.http.post<any>(`${environment.dbLink}Users.json`, data);
   };
+
+  getUsers = () => {
+    return this.http.get(`${environment.dbLink}Users.json`);
+  };
 }

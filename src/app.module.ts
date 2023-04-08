@@ -8,9 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent],
+  declarations: [AppComponent, RegisterComponent, UsersComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

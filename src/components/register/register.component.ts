@@ -21,6 +21,15 @@ export class RegisterComponent implements OnInit {
     ModifiedDate: new FormControl(''),
   });
 
+  logInForm = new FormGroup({
+    UserName: new FormControl('', [Validators.required]),
+    Password: new FormControl('', [Validators.required]),
+  });
+
+  //bool
+  isRegister: boolean = false;
+  submitted: boolean = false;
+
   constructor(public userServ: UserService) {}
 
   ngOnInit(): void {}
@@ -33,17 +42,40 @@ export class RegisterComponent implements OnInit {
   onSubmit = () => {
     this.form.controls.IsActive.setValue(true);
     this.form.controls.Id.setValue(UUID.UUID());
-    this.form.controls.CreatedDate.setValue(Date.now.toString());
+    this.form.controls.CreatedDate.setValue(Date.now().toString());
     this.form.controls.CreatedDate.setValue('');
-
-    this.userServ.addUser(this.form.value).subscribe({
-      next: (res: any) => {
-        console.log(res);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-      complete: () => {},
-    });
+    if (this.form.valid) {
+      this.userServ.addUser(this.form.getRawValue()).subscribe({
+        next: (res: any) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+        complete: () => {},
+      });
+    }
   };
+
+  onLogInSubmit = () => {
+    if (this.form.valid) {
+      this.userServ.addUser(this.form.getRawValue()).subscribe({
+        next: (res: any) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+        complete: () => {},
+      });
+    }
+  };
+
+  get f() {
+    return this.form.controls;
+  }
+
+  get a() {
+    return this.logInForm.controls;
+  }
 }
