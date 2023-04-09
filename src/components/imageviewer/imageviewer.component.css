@@ -1,0 +1,23 @@
+#panorama {
+	width: 100vw;
+	height: 100vh;
+}
+#controls {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+    padding-bottom: 3px;
+}
+.ctrl {
+    padding: 8px 5px;
+    width: 30px;
+    text-align: center;
+    background: rgba(200, 200, 200, 0.8);
+    display: inline-block;
+    cursor: pointer;
+}
+.ctrl:hover {
+    background: rgba(200, 200, 200, 1);
+}

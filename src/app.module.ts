@@ -9,9 +9,10 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UsersComponent } from './components/users/users.component';
+import { ImageviewerComponent } from './components/imageviewer/imageviewer.component';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent, UsersComponent],
+  declarations: [AppComponent, RegisterComponent, UsersComponent, ImageviewerComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
