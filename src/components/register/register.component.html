@@ -17,8 +17,9 @@
                             <input type="text" name="FirstName" id="FirstName" formControlName="FirstName"
                                 class="form-control">
                             <div *ngIf="f['FirstName'].touched && f['FirstName'].invalid">
-                                <div *ngIf="f['FirstName'].errors && f['FirstName'].errors['required']"><span
-                                        class="error">First Name is Required</span></div>
+                                <div *ngIf="f['FirstName'].errors && f['FirstName'].errors['required']">
+                                    <span class="error">First Name is Required</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -30,8 +31,9 @@
                         <div class="col-9">
                             <input type="text" formControlName="LastName" class="form-control">
                             <div *ngIf="f['LastName'].touched && f['LastName'].invalid">
-                                <div *ngIf="f['LastName'].errors && f['LastName'].errors['required']"><span
-                                        class="error">Last Name is Required</span></div>
+                                <div *ngIf="f['LastName'].errors && f['LastName'].errors['required']">
+                                    <span class="error">Last Name is Required</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -42,8 +44,22 @@
                         <div class="col-9">
                             <input type="text" formControlName="UserName" class="form-control">
                             <div *ngIf="f['UserName'].touched && f['UserName'].invalid">
-                                <div *ngIf="f['UserName'].errors && f['UserName'].errors['required']"><span
-                                        class="error">User Name is Required</span></div>
+                                <div *ngIf="f['UserName'].errors && f['UserName'].errors['required']">
+                                    <span class="error">User Name is Required</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <span>Email</span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" formControlName="Email" class="form-control">
+                            <div *ngIf="f['Email'].touched && f['Email'].invalid">
+                                <div *ngIf="f['Email'].errors && f['Email'].errors['required']">
+                                    <span class="error">Email is Required</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -54,8 +70,9 @@
                         <div class="col-9">
                             <input type="password" formControlName="Password" class="form-control">
                             <div *ngIf="f['Password'].touched && f['Password'].invalid">
-                                <div *ngIf="f['Password'].errors && f['Password'].errors['required']"><span
-                                        class="error">Password is Required</span></div>
+                                <div *ngIf="f['Password'].errors && f['Password'].errors['required']">
+                                    <span class="error">Password is Required</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -66,8 +83,9 @@
                         <div class="col-9">
                             <input type="number" formControlName="PhoneNumber" class="form-control">
                             <div *ngIf="f['PhoneNumber'].touched && f['PhoneNumber'].invalid">
-                                <div *ngIf="f['PhoneNumber'].errors && f['PhoneNumber'].errors['required']"><span
-                                        class="error">Phone Number is Required</span></div>
+                                <div *ngIf="f['PhoneNumber'].errors && f['PhoneNumber'].errors['required']">
+                                    <span class="error">Phone Number is Required</span>
+                                </div>
                             </div>
                             <!-- <ngx-intl-tel-input [cssClass]="'custom'"
                             [preferredCountries]="[CountryISO.UnitedStates, CountryISO.UnitedKingdom]"
@@ -86,10 +104,10 @@
                 <form [formGroup]="logInForm" (ngSubmit)="onLogInSubmit()">
                     <div class="row mt-3">
                         <div class="col-3">
-                            <span>User Name</span>
+                            <span>Email</span>
                         </div>
                         <div class="col-9">
-                            <input type="text" formControlName="UserName" class="form-control">
+                            <input type="text" formControlName="Email" class="form-control">
                         </div>
                     </div>
                     <div class="row mt-3">

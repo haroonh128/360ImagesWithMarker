@@ -14,6 +14,7 @@ export class RegisterComponent implements OnInit {
     FirstName: new FormControl('', [Validators.required]),
     LastName: new FormControl('', [Validators.required]),
     UserName: new FormControl('', [Validators.required]),
+    Email: new FormControl('', [Validators.required]),
     Password: new FormControl('', [Validators.required]),
     PhoneNumber: new FormControl(0, [Validators.required]),
     IsActive: new FormControl(false),
@@ -22,7 +23,7 @@ export class RegisterComponent implements OnInit {
   });
 
   logInForm = new FormGroup({
-    UserName: new FormControl('', [Validators.required]),
+    Email: new FormControl('', [Validators.required]),
     Password: new FormControl('', [Validators.required]),
   });
 
@@ -58,8 +59,8 @@ export class RegisterComponent implements OnInit {
   };
 
   onLogInSubmit = () => {
-    if (this.form.valid) {
-      this.userServ.addUser(this.form.getRawValue()).subscribe({
+    if (this.logInForm.valid) {
+      this.userServ.logIn(this.logInForm.getRawValue()).subscribe({
         next: (res: any) => {
           console.log(res);
         },

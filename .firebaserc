@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "imageswithmarker": {
+      "hosting": {
+        "360ImagesWithMarker": [
+          "imageswithmarker"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "imageswithmarker"
+  }
+}

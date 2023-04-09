@@ -30,7 +30,7 @@
               "./node_modules/intl-tel-input/build/css/intlTelInput.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js", 
+              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/jquery/dist/jquery.min.js"
             ]
@@ -108,6 +108,16 @@
               "src/styles.css"
             ],
             "scripts": []
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "360ImagesWithMarker:build:production",
+            "firebaseProject": "imageswithmarker",
+            "firebaseHostingSite": "imageswithmarker"
           }
         }
       }
