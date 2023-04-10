@@ -28,7 +28,8 @@
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/intl-tel-input/build/css/intlTelInput.css",
-              "./node_modules/pannellum/build/pannellum.css"
+              "./node_modules/pannellum/build/pannellum.css",
+              "./node_modules/ngx_toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

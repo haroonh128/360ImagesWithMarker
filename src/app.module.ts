@@ -10,9 +10,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UsersComponent } from './components/users/users.component';
 import { ImageviewerComponent } from './components/imageviewer/imageviewer.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from './environments/environment';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent, UsersComponent, ImageviewerComponent],
+  declarations: [
+    AppComponent,
+    RegisterComponent,
+    UsersComponent,
+    ImageviewerComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -21,6 +29,8 @@ import { ImageviewerComponent } from './components/imageviewer/imageviewer.compo
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

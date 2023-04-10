@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -31,7 +34,12 @@ export class RegisterComponent implements OnInit {
   isRegister: boolean = false;
   submitted: boolean = false;
 
-  constructor(public userServ: UserService) {}
+  constructor(
+    public userServ: UserService,
+    private fireAuth: AngularFireAuth,
+    private toastr: ToastrService,
+    private route: Router
+  ) {}
 
   ngOnInit(): void {}
 
@@ -44,33 +52,63 @@ export class RegisterComponent implements OnInit {
     this.form.controls.IsActive.setValue(true);
     this.form.controls.Id.setValue(UUID.UUID());
     this.form.controls.CreatedDate.setValue(Date.now().toString());
-    this.form.controls.CreatedDate.setValue('');
+    var email = this.form.controls.Email.value;
+    let pass = this.form.controls.Password.value;
     if (this.form.valid) {
-      this.userServ.addUser(this.form.getRawValue()).subscribe({
-        next: (res: any) => {
-          console.log(res);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-        complete: () => {},
-      });
+      this.fireAuth
+        .createUserWithEmailAndPassword(String(email), String(pass))
+        .then(
+          () => {
+            this.userServ.addUser(this.form.getRawValue()).subscribe({
+              next: (res: any) => {
+                this.toastr.success('User Registered Successfully');
+                this.isRegister = false;
+              },
+              error: (err) => {
+                console.log(err);
+                this.toastr.error('Error Occured');
+              },
+              complete: () => {},
+            });
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
     }
   };
 
-  onLogInSubmit = () => {
-    if (this.logInForm.valid) {
-      this.userServ.logIn(this.logInForm.getRawValue()).subscribe({
-        next: (res: any) => {
-          console.log(res);
+  logIn = () => {
+    this.fireAuth
+      .signInWithEmailAndPassword(
+        String(this.logInForm.controls.Email.value),
+        String(this.logInForm.controls.Password.value)
+      )
+      .then(
+        () => {
+          localStorage.setItem('token', 'true');
+          this.toastr.success('LoggedIn successfully.');
+          this.route.navigate(['users']);
         },
-        error: (err) => {
-          console.log(err);
-        },
-        complete: () => {},
-      });
-    }
+        (err) => {
+          console.error(err);
+        }
+      );
   };
+
+  // register = (data: any) => {
+  //   this.fireAuth
+  //     .createUserWithEmailAndPassword(data.Email, data.Password)
+  //     .then(
+  //       () => {
+  //         localStorage.setItem('token', 'true');
+  //         this.toastr.success('User Registered successfully.');
+  //       },
+  //       (err) => {
+  //         console.error(err);
+  //       }
+  //     );
+  // };
 
   get f() {
     return this.form.controls;
