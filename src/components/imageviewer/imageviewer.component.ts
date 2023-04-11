@@ -5,6 +5,8 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ImageViewerService } from 'src/services/image-viewer.service';
 declare var pannellum: any;
 @Component({
   selector: 'app-imageviewer',
@@ -17,6 +19,20 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
   @ViewChild('zoomIn') zoomIn: ElementRef | undefined;
   @ViewChild('zoomOut') zoomOut: ElementRef | undefined;
   @ViewChild('fullScreen') fullScreen: ElementRef | undefined;
+
+  form = new FormGroup({
+    Id: new FormControl(''),
+    Title: new FormControl('', [Validators.required]),
+    Description: new FormControl('', [Validators.required]),
+    Lat: new FormControl(''),
+    Long: new FormControl(''),
+    IsDeleted: new FormControl(false),
+    CreatedBy: new FormControl(''),
+    ModifiedBy: new FormControl(''),
+    UserId: new FormControl(''),
+  });
+
+  constructor(private imgSer: ImageViewerService) {}
 
   //For setting mouse position on mousedown
   mousePosition = {
@@ -208,4 +224,40 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
       scope.viewer.toggleFullscreen();
     });
   }
+
+  addImageViewer = () => {
+    this.form.controls.CreatedBy.setValue(Date.now().toString());
+
+    this.imgSer.addImgPointer(this.form.getRawValue()).then(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  };
+
+  delImageViewer = () => {
+    this.imgSer.deleteImgPointer(this.form.controls.Id.value?.toString()).then(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  };
+
+  getImagePointers = () => {
+    this.imgSer.getImagePointers().subscribe({
+      next(value) {
+        console.log(value);
+      },
+      error(err) {
+        console.log(err);
+      },
+      complete() {},
+    });
+  };
 }
