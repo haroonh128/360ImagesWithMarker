@@ -5,19 +5,19 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-2">Row No.</div>
-                <div class="col-2">First Name</div>
-                <div class="col-2">Last Name</div>
-                <div class="col-2">User Name</div>
-                <div class="col-2">Phone</div>
-                <div class="col-2">Action</div>
+                <div class="col-2"><b>Row No.</b></div>
+                <div class="col-2"><b>First Name</b></div>
+                <div class="col-2"><b>Last Name</b></div>
+                <div class="col-2"><b>User Name</b></div>
+                <div class="col-2"><b>Phone</b></div>
+                <div class="col-2"><b>Action</b></div>
 
             </div>
             <div class="row" *ngFor="let a of userList; let i = index">
-                <div class="col-2">{{i}}</div>
+                <div class="col-2">{{i+1}}</div>
+                <div class="col-2">{{a.FirstName}}</div>
                 <div class="col-2">{{a.LastName}}</div>
-                <div class="col-2">{{a.LastName}}</div>
-                <div class="col-2">{{a.UsertName}}</div>
+                <div class="col-2">{{a.UserName}}</div>
                 <div class="col-2">{{a.PhoneNumber}}</div>
                 <div class="col-2"><i class="fa fa-trash"></i></div>
 

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from 'src/services/user.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +39,8 @@ export class RegisterComponent implements OnInit {
     public userServ: UserService,
     private fireAuth: AngularFireAuth,
     private toastr: ToastrService,
-    private route: Router
+    private route: Router,
+    private crud: AngularFirestore
   ) {}
 
   ngOnInit(): void {}
@@ -59,17 +61,19 @@ export class RegisterComponent implements OnInit {
         .createUserWithEmailAndPassword(String(email), String(pass))
         .then(
           () => {
-            this.userServ.addUser(this.form.getRawValue()).subscribe({
-              next: (res: any) => {
-                this.toastr.success('User Registered Successfully');
-                this.isRegister = false;
-              },
-              error: (err) => {
-                console.log(err);
-                this.toastr.error('Error Occured');
-              },
-              complete: () => {},
-            });
+            this.crud
+              .collection('/Users')
+              .add(this.form.getRawValue())
+              .then(
+                (r) => {
+                  this.toastr.success('User Registered Successfully');
+                  this.isRegister = false;
+                },
+                (err) => {
+                  console.log(err);
+                  this.toastr.error('Error Occured');
+                }
+              );
           },
           (err) => {
             console.error(err);
@@ -95,20 +99,6 @@ export class RegisterComponent implements OnInit {
         }
       );
   };
-
-  // register = (data: any) => {
-  //   this.fireAuth
-  //     .createUserWithEmailAndPassword(data.Email, data.Password)
-  //     .then(
-  //       () => {
-  //         localStorage.setItem('token', 'true');
-  //         this.toastr.success('User Registered successfully.');
-  //       },
-  //       (err) => {
-  //         console.error(err);
-  //       }
-  //     );
-  // };
 
   get f() {
     return this.form.controls;

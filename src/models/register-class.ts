@@ -1,4 +1,6 @@
-export class RegisterClass {
+import * as firebase from 'firebase/compat';
+
+export interface RegisterClass {
   Id: number;
   UserName: string;
   FirstName: string;
@@ -9,15 +11,15 @@ export class RegisterClass {
   CreatedDate: string;
   ModifiedDate: string;
 
-  constructor() {
-    this.Id = 0;
-    this.UserName = '';
-    this.FirstName = '';
-    this.LastName = '';
-    this.Password = '';
-    this.PhoneNo = 0;
-    this.IsActive = false;
-    this.CreatedDate = '';
-    this.ModifiedDate = '';
-  }
+  // constructor() {
+  //   this.Id = 0;
+  //   this.UserName = '';
+  //   this.FirstName = '';
+  //   this.LastName = '';
+  //   this.Password = '';
+  //   this.PhoneNo = 0;
+  //   this.IsActive = false;
+  //   this.CreatedDate = '';
+  //   this.ModifiedDate = '';
+  // }
 }
