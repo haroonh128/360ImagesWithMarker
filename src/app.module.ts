@@ -13,6 +13,8 @@ import { ImageviewerComponent } from './components/imageviewer/imageviewer.compo
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from './environments/environment';
 import { ToastrModule } from 'ngx-toastr';
+import { AgmCoreModule } from '@agm/core';
+import { MapviewerComponent } from './components/mapviewer/mapviewer.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +22,13 @@ import { ToastrModule } from 'ngx-toastr';
     RegisterComponent,
     UsersComponent,
     ImageviewerComponent,
+    MapviewerComponent,
   ],
   imports: [
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAy-keeXMuyQHOBUHwUfNz8jFZK5agMEeM',
+      libraries: ['drawing'],
+    }),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

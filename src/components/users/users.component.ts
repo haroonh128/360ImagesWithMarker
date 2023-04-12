@@ -3,6 +3,7 @@ import { RegisterClass } from 'src/models/register-class';
 import { ImageViewerService } from 'src/services/image-viewer.service';
 import { UserService } from 'src/services/user.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector: 'app-users',
@@ -14,7 +15,7 @@ export class UsersComponent implements OnInit {
   showModal: boolean = false;
 
   form = new FormGroup({
-    Id: new FormControl(''),
+    Id: new FormControl(UUID.UUID),
     Title: new FormControl('', [Validators.required]),
     Description: new FormControl('', [Validators.required]),
     Lat: new FormControl(''),
@@ -53,7 +54,6 @@ export class UsersComponent implements OnInit {
 
   addImage = () => {
     this.form.controls.CreatedDate.setValue(Date.now().toString());
-
     this.imgSer.addImage(this.form.getRawValue()).then(
       (res) => {
         console.log(res);
