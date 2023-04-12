@@ -18,4 +18,17 @@ export class ImageViewerService {
   getImagePointers = () => {
     return this.afs.collection('/ImageViewer').snapshotChanges();
   };
+
+  addImage = (data: any) => {
+    return this.afs.collection('/Images').add(data);
+  };
+
+  deleteImage = (id?: string) => {
+    return this.afs.doc(`/Images/${id}`).delete();
+  };
+
+  getImages = () => {
+    return this.afs.collection('/Images').snapshotChanges();
+  };
+
 }

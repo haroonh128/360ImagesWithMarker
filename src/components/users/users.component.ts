@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RegisterClass } from 'src/models/register-class';
+import { ImageViewerService } from 'src/services/image-viewer.service';
 import { UserService } from 'src/services/user.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -9,10 +11,27 @@ import { UserService } from 'src/services/user.service';
 })
 export class UsersComponent implements OnInit {
   userList: any = [];
-  constructor(private userServ: UserService) {}
+  showModal: boolean = false;
+
+  form = new FormGroup({
+    Id: new FormControl(''),
+    Title: new FormControl('', [Validators.required]),
+    Description: new FormControl('', [Validators.required]),
+    Lat: new FormControl(''),
+    Long: new FormControl(''),
+    IsDeleted: new FormControl(false),
+    CreatedDate: new FormControl(''),
+    UserId: new FormControl(''),
+  });
+
+  constructor(private userServ: UserService, private imgSer: ImageViewerService) { }
 
   ngOnInit(): void {
     this.getUsers();
+  }
+
+  modalToggle = () => {
+    this.showModal = !this.showModal;
   }
 
   getUsers = () => {
@@ -28,7 +47,21 @@ export class UsersComponent implements OnInit {
       error: (err) => {
         console.error(err);
       },
-      complete: () => {},
+      complete: () => { },
     });
+  };
+
+  addImage = () => {
+    this.form.controls.CreatedDate.setValue(Date.now().toString());
+
+    this.imgSer.addImage(this.form.getRawValue()).then(
+      (res) => {
+        console.log(res);
+        this.modalToggle();
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   };
 }

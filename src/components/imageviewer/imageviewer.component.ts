@@ -19,7 +19,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
   @ViewChild('zoomIn') zoomIn: ElementRef | undefined;
   @ViewChild('zoomOut') zoomOut: ElementRef | undefined;
   @ViewChild('fullScreen') fullScreen: ElementRef | undefined;
-
+  showModal: boolean = false;
   form = new FormGroup({
     Id: new FormControl(''),
     Title: new FormControl('', [Validators.required]),
@@ -29,6 +29,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
     IsDeleted: new FormControl(false),
     CreatedBy: new FormControl(''),
     ModifiedBy: new FormControl(''),
+    ImageId: new FormControl(''),
     UserId: new FormControl(''),
   });
 
@@ -112,61 +113,6 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
       // }
     });
 
-    // Additional functions that we can use
-    // var upMove = function () {
-    //   try {
-    //     scope.viewer.setPitch(scope.viewer.getPitch() + 5);
-    //   }
-    //   catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-
-    // var rightMove = function () {
-    //   try {
-    //     scope.viewer.setYaw(scope.viewer.getYaw() + 5);
-    //   }
-    //   catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-
-    // var downMove = function () {
-    //   try {
-    //     scope.viewer.setPitch(scope.viewer.getPitch() - 5);
-    //   }
-    //   catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-
-    // var leftMove = function () {
-    //   try {
-    //     scope.viewer.setYaw(scope.viewer.getYaw() - 5);
-    //   }
-    //   catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-
-    // var swapImage = function () {
-    //   try {
-    //     var inv_Pitch = scope.viewer.getPitch();
-    //     var inv_Yaw = scope.viewer.getYaw();
-    //     var inv_Hfov = scope.viewer.getHfov();
-
-    //     if (scope.viewer.getScene() == 'circle') {
-    //       scope.viewer.loadScene('house', inv_Pitch, inv_Yaw, inv_Hfov)
-    //     }
-    //     else {
-    //       scope.viewer.loadScene('circle', inv_Pitch, inv_Yaw, inv_Hfov)
-    //     }
-    //   }
-    //   catch (e) {
-
-    //   }
-    // }
-
     //Mouse click event on image
     scope.viewer.on('mousedown', function (event: any) {
       if (scope.cursor.style.cursor == 'pointer') {
@@ -187,12 +133,16 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
           // coords[0] is pitch, coords[1] is yaw
           var coords = scope.viewer.mouseEventToCoords(event);
           console.log('coords', coords);
-          //Adding hotspot/marker in the current image
-          scope.viewer.addHotSpot({
-            pitch: coords[0],
-            yaw: coords[1],
-            text: 'New Hotspot',
-          });
+          scope.modalToggle();
+          scope.form.controls.Lat.setValue(coords[0]);
+          scope.form.controls.Long.setValue(coords[1]);
+
+          // //Adding hotspot/marker in the current image
+          // scope.viewer.addHotSpot({
+          //   pitch: coords[0],
+          //   yaw: coords[1],
+          //   text: 'New Hotspot',
+          // });
           // Do something with the coordinates here...
         }
       }
@@ -225,12 +175,23 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  addImageViewer = () => {
+  modalToggle = () => {
+    this.showModal = !this.showModal;
+  }
+
+  addPointerToImage = () => {
     this.form.controls.CreatedBy.setValue(Date.now().toString());
 
     this.imgSer.addImgPointer(this.form.getRawValue()).then(
       (res) => {
         console.log(res);
+         //Adding hotspot/marker in the current image
+         this.viewer.addHotSpot({
+          pitch: this.form.controls.Lat.value,
+          yaw: this.form.controls.Long.value,
+          text: this.form.controls.Title.value,
+        });
+        this.modalToggle();
       },
       (err) => {
         console.error(err);
