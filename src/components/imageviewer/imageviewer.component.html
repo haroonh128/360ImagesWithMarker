@@ -1,15 +1,11 @@
-<div id="panorama">
+<div id="panorama" [ngClass]="mapViewer? '': 'panorama'">
     <div id="controls">
         <div class="ctrl" #zoomIn>&plus;</div>
         <div class="ctrl" #zoomOut>&minus;</div>
         <div class="ctrl" #fullScreen>&#x2922;</div>
-        <div class="ctrl" #addMarker>&#x2714;</div>
+        <div class="ctrl" #addMarker *ngIf="!mapViewer">&#x2714;</div>
     </div>
 </div>
-
-
-
-
 
 <div class="modal d-block" tabindex="-1" role="dialog" *ngIf="showModal">
     <div class="modal-dialog" role="document">
@@ -48,7 +44,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" (click)="addPointerToImage()">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modalToggle()">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="modalToggle()">Close</button>
             </div>
         </div>
     </div>

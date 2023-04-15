@@ -4,6 +4,7 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ImageViewerService } from 'src/services/image-viewer.service';
@@ -12,8 +13,10 @@ declare var pannellum: any;
   selector: 'app-imageviewer',
   templateUrl: './imageviewer.component.html',
   styleUrls: ['./imageviewer.component.css'],
-})
+})  
 export class ImageviewerComponent implements OnInit, AfterViewInit {
+  @Input() marker: any;
+  @Input() mapViewer: boolean = false;
   //Custom buttons
   @ViewChild('addMarker') addMarker: ElementRef | undefined;
   @ViewChild('zoomIn') zoomIn: ElementRef | undefined;

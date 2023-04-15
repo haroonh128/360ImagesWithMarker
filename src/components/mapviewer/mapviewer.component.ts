@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { UUID } from 'angular2-uuid';
+import { ImageViewerService } from 'src/services/image-viewer.service';
 import { MapViewerService } from 'src/services/map-viewer.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { MapViewerService } from 'src/services/map-viewer.service';
   templateUrl: './mapviewer.component.html',
   styleUrls: ['./mapviewer.component.css'],
 })
-export class MapviewerComponent {
+export class MapviewerComponent implements OnInit {
   form = new FormGroup({
     Id: new FormControl(UUID.UUID()),
     Name: new FormControl(''),
@@ -22,50 +23,22 @@ export class MapviewerComponent {
     url: new FormControl(''),
   });
 
-  zoom: number = 8;
+  zoom: number = 0;
   map: any;
   viewer: any = null;
   showModal: boolean = false;
   // initial center position for the map
-  lat: number = 51.673858;
-  lng: number = 7.815982;
-  markers: marker[] = [
-    {
-      lat: 51.673858,
-      lng: 7.815982,
-      label: 'A',
-      draggable: true,
-      content: 'InfoWindow content',
-      color: '#FFFFFF',
-      iconUrl: 'http://maps.google.com/mapfiles/ms/micons/gas.png',
-    },
-    {
-      lat: 51.373858,
-      lng: 7.215982,
-      label: 'B',
-      draggable: false,
-      content: 'InfoWindow content',
-      color: 'blue',
-      iconUrl: 'http://maps.google.com/mapfiles/ms/micons/dollar.png',
-    },
-    {
-      lat: 51.723858,
-      lng: 7.495982,
-      label: 'C',
-      draggable: true,
-      content: 'InfoWindow content',
-      color: 'red',
-      iconUrl: 'http://maps.google.com/mapfiles/ms/micons/police.png',
-    },
-  ];
+  lat: number = 0;
+  lng: number = 0;
+  imagesList: any = [];
+  selectedMarker: any = null;
   clickedMarker(label: string, index: number) {
     console.log(`clicked the marker: ${label || index}`);
   }
 
-  constructor(private mapSer: MapViewerService) {}
-
-  mapClicked(event: any) {
-    console.log('map clicked');
+  constructor(private mapSer: MapViewerService, private imageServ: ImageViewerService) { }
+  ngOnInit(): void {
+    this.getImages();
   }
   onMapReady(map: any) {
     var ownRef = this;
@@ -98,7 +71,56 @@ export class MapviewerComponent {
     map.addListener('zoom_changed', () => {
       ownRef.zoom = map.getZoom();
     });
+    map.addListener("click", (event: any) => {
+      console.log(event.latLng.toJSON());
+    });
     this.map = map;
+  }
+
+  getImages = () => {
+    this.imageServ.getImages().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.imagesList = res.map((a: any) => {
+          const data = a.payload.doc.data();
+          // data.Id = a.payload.doc.id;
+          return data;
+        });
+        if (this.imagesList.length > 0) {
+          this.addImageMarkers()
+        }
+      },
+      error: (err) => {
+        console.error(err);
+      },
+      complete: () => {
+      }
+    });
+  };
+  addImageMarkers = () => {
+    var scope = this;
+    this.imagesList.map((point: any) => {
+      const icon = {
+        url: '../../assets/360marker.png', // url
+        scaledSize: new google.maps.Size(28, 28), // scaled size
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(0, 0) // anchor
+      };
+      var marker = new google.maps.Marker({
+        title: point.Title,
+        icon: icon,
+        map: this.map,
+        position: new google.maps.LatLng(
+          51.673858, 7.815982
+        ),
+      });
+      marker.setCursor('pointer');
+      google.maps.event.addListener(marker, 'click', function (e) {
+        //Open image in panellum
+        scope.selectedMarker = marker;
+      });
+      marker.setMap(this.map);
+    })
   }
 
   addMapImage = () => {
@@ -140,7 +162,7 @@ export class MapviewerComponent {
       error(err) {
         console.log(err);
       },
-      complete() {},
+      complete() { },
     });
   };
 
