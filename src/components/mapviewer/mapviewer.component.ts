@@ -9,22 +9,8 @@ import { MapViewerService } from 'src/services/map-viewer.service';
   styleUrls: ['./mapviewer.component.css'],
 })
 export class MapviewerComponent {
-  form = new FormGroup({
-    Id: new FormControl(UUID.UUID()),
-    Name: new FormControl(''),
-    Description: new FormControl(''),
-    ImageId: new FormControl(''),
-    xAxis: new FormControl(''),
-    yAxis: new FormControl(''),
-    IsDeleted: new FormControl(false),
-    CreatedBy: new FormControl(''),
-    ModifiedBy: new FormControl(''),
-    url: new FormControl(''),
-  });
-
   zoom: number = 8;
   map: any;
-  viewer: any = null;
   showModal: boolean = false;
   // initial center position for the map
   lat: number = 51.673858;
@@ -62,7 +48,7 @@ export class MapviewerComponent {
     console.log(`clicked the marker: ${label || index}`);
   }
 
-  constructor(private mapSer: MapViewerService) {}
+  constructor() {}
 
   mapClicked(event: any) {
     console.log('map clicked');
@@ -100,53 +86,6 @@ export class MapviewerComponent {
     });
     this.map = map;
   }
-
-  addMapImage = () => {
-    this.form.controls.CreatedBy.setValue(Date.now().toString());
-
-    this.mapSer.addMapPointer(this.form.getRawValue()).then(
-      (res) => {
-        console.log(res);
-        //Adding hotspot/marker in the current image
-        this.viewer.addHotSpot({
-          pitch: this.form.controls.xAxis.value,
-          yaw: this.form.controls.yAxis.value,
-          text: this.form.controls.Name.value,
-        });
-        this.modalToggle();
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  };
-
-  delMapImage = () => {
-    this.mapSer.deleteMapPointer(this.form.controls.Id.value?.toString()).then(
-      (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  };
-
-  getMapImage = () => {
-    this.mapSer.getMap().subscribe({
-      next(value) {
-        console.log(value);
-      },
-      error(err) {
-        console.log(err);
-      },
-      complete() {},
-    });
-  };
-
-  modalToggle = () => {
-    this.showModal = !this.showModal;
-  };
 }
 
 // just an interface for type safety.
