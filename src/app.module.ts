@@ -16,6 +16,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AgmCoreModule } from '@agm/core';
 import { MapviewerComponent } from './components/mapviewer/mapviewer.component';
 import { MapImagesComponent } from './components/map-images/map-images.component';
+import { AdminmapviewerComponent } from './components/adminmapviewer/adminmapviewer.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MapImagesComponent } from './components/map-images/map-images.component
     ImageviewerComponent,
     MapviewerComponent,
     MapImagesComponent,
+    AdminmapviewerComponent,
   ],
   imports: [
     AgmCoreModule.forRoot({

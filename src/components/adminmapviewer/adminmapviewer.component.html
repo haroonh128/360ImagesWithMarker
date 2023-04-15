@@ -1,17 +1,15 @@
-<div id="panorama" [ngClass]="mapViewer? '': 'panorama'">
-    <div id="controls">
-        <div class="ctrl" #zoomIn>&plus;</div>
-        <div class="ctrl" #zoomOut>&minus;</div>
-        <div class="ctrl" #fullScreen>&#x2922;</div>
-        <div class="ctrl" #addMarker *ngIf="!mapViewer">&#x2714;</div>
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" (mapReady)="onMapReady($event)">
+    <div id="addImage" (click)="modalToggle()" class="add-image-icon cursor_pointer mr-2 mt-2" data-toggle="tooltip"
+        data-placement="right" title="Add Image">
+        <img src="../../assets/addimage.png" width="28" />
     </div>
-</div>
+</agm-map>
 
 <div class="modal d-block" tabindex="-1" role="dialog" *ngIf="showModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Pointers Popup</h5>
+                <h5 class="modal-title">360 Image</h5>
                 <button (click)="modalToggle()" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -20,8 +18,8 @@
                 <form [formGroup]="form">
                     <div class="row">
                         <div class="col-12">
-                            Title
-                            <input class="form-control" formControlName="Title" />
+                            Name
+                            <input class="form-control" formControlName="Name" />
                         </div>
                     </div>
 
@@ -29,6 +27,24 @@
                         <div class="col-12">
                             Description
                             <input class="form-control" formControlName="Description" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Lattitude
+                            <input class="form-control" formControlName="Lattitude" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Longitude
+                            <input class="form-control" formControlName="Longitude" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Image URL
+                            <input class="form-control" formControlName="url" />
                         </div>
                     </div>
 
@@ -43,7 +59,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="addPointerToImage()">Save changes</button>
+                <button type="button" class="btn btn-primary" (click)="addImage()">Add Image</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                     (click)="modalToggle()">Close</button>
             </div>
