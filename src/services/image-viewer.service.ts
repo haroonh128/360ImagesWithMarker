@@ -30,5 +30,4 @@ export class ImageViewerService {
   getImages = () => {
     return this.afs.collection('/Images').snapshotChanges();
   };
-
 }

@@ -16,7 +16,7 @@ export class MapViewerService {
   };
 
   getMapPointers = () => {
-    return this.afs.collection('/MapViewer').snapshotChanges();
+    return this.afs.collection(`/MapViewer`).snapshotChanges();
   };
 
   addMap = (data: any) => {

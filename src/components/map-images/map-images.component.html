@@ -1,1 +1,119 @@
-<p>map-images works!</p>
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <p class="crd">
+
+                <span><b>Map Images</b></span>
+                <span class="float-end"><a routerLink="imageViewer">ImageViewer</a></span>
+            </p>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="addMapImage()">
+                <div class="row">
+                    <div class="col-3">
+                        <span> Name</span>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="Name" id="Name" formControlName="Name" class="form-control">
+                        <div *ngIf="f['Name'].touched && f['Name'].invalid">
+                            <div *ngIf="f['Name'].errors && f['Name'].errors['required']">
+                                <span class="error">First Name is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <span>Description</span>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="Description" class="form-control">
+                        <div *ngIf="f['Description'].touched && f['Description'].invalid">
+                            <div *ngIf="f['Description'].errors && f['Description'].errors['required']">
+                                <span class="error">Last Name is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <span>Lat</span>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="lat" class="form-control">
+
+                        <div *ngIf="f['lat'].touched && f['lat'].invalid">
+                            <div *ngIf="f['lat'].errors && f['lat'].errors['required']">
+                                <span class="error">User Name is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <span>Long</span>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" formControlName="long" class="form-control">
+                        <div *ngIf="f['long'].touched && f['long'].invalid">
+                            <div *ngIf="f['long'].errors && f['long'].errors['required']">
+                                <span class="error">long is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <span>Upload Image</span>
+                    </div>
+                    <div class="col-9">
+                        <!-- <div class="row">
+                            <div class="col-10"> -->
+                        <input type="file" (change)="onFileChanged($event)" formControlName="url" class="form-control">
+                        <!-- </div> -->
+                        <!-- <div class="col-2"><button (click)="uploadImage()" class="btn btn-secondary">Upload
+                                    Image</button></div>
+                        </div> -->
+                        <div *ngIf="f['url'].touched && f['url'].invalid">
+                            <div *ngIf="f['url'].errors && f['url'].errors['required']">
+                                <span class="error">url is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3"><button type="submit" class="btn btn-success">Submit</button></div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-header">
+            <span><b>Users List</b></span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2"><b>Row No.</b></div>
+                <div class="col-2"><b>Name</b></div>
+                <div class="col-2"><b>Description</b></div>
+                <div class="col-2"><b>Lat</b></div>
+                <div class="col-2"><b>Long</b></div>
+                <div class="col-2"><b>Action</b></div>
+
+            </div>
+            <div class="row" *ngFor="let a of imgList; let i = index">
+                <div class="col-2">{{i+1}}</div>
+                <div class="col-2">{{a.Name}}</div>
+                <div class="col-2">{{a.Description}}</div>
+                <div class="col-2">{{a.lat}}</div>
+                <div class="col-2">{{a.long}}</div>
+                <div class="col-2"><i class="fa fa-trash" (click)="delMapImage()"></i></div>
+
+            </div>
+        </div>
+    </div>
+</div>

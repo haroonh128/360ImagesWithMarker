@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RegisterClass } from 'src/models/register-class';
 import { ImageViewerService } from 'src/services/image-viewer.service';
 import { UserService } from 'src/services/user.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -25,7 +24,10 @@ export class UsersComponent implements OnInit {
     UserId: new FormControl(''),
   });
 
-  constructor(private userServ: UserService, private imgSer: ImageViewerService) { }
+  constructor(
+    private userServ: UserService,
+    private imgSer: ImageViewerService
+  ) {}
 
   ngOnInit(): void {
     this.getUsers();
@@ -33,22 +35,20 @@ export class UsersComponent implements OnInit {
 
   modalToggle = () => {
     this.showModal = !this.showModal;
-  }
+  };
 
   getUsers = () => {
     this.userServ.getUsers().subscribe({
       next: (res: any) => {
-        console.log(res);
         this.userList = res.map((a: any) => {
           const data = a.payload.doc.data();
-          // data.Id = a.payload.doc.id;
           return data;
         });
       },
       error: (err) => {
         console.error(err);
       },
-      complete: () => { },
+      complete: () => {},
     });
   };
 

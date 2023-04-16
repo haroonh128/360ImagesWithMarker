@@ -89,8 +89,10 @@ export class RegisterComponent implements OnInit {
         String(this.logInForm.controls.Password.value)
       )
       .then(
-        () => {
-          localStorage.setItem('token', 'true');
+        (res: any) => {
+          const user = res.user.multiFactor.user;
+          localStorage.setItem('user', user);
+          localStorage.setItem('uid', user.uid);
           this.toastr.success('LoggedIn successfully.');
           this.route.navigate(['users']);
         },
