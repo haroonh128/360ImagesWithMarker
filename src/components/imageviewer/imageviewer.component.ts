@@ -5,16 +5,19 @@ import {
   ElementRef,
   ViewChild,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ImageViewerService } from 'src/services/image-viewer.service';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 declare var pannellum: any;
 @Component({
   selector: 'app-imageviewer',
   templateUrl: './imageviewer.component.html',
   styleUrls: ['./imageviewer.component.css'],
-})  
-export class ImageviewerComponent implements OnInit, AfterViewInit {
+})
+export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() marker: any;
   @Input() mapViewer: boolean = false;
   //Custom buttons
@@ -35,8 +38,10 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
     ImageId: new FormControl(''),
     UserId: new FormControl(''),
   });
+  hotspotsList: any = [];
 
-  constructor(private imgSer: ImageViewerService) {}
+  constructor(private imgSer: ImageViewerService,
+    private store: AngularFireStorage) { }
 
   //For setting mouse position on mousedown
   mousePosition = {
@@ -50,13 +55,11 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     var scope = this;
-
     //Pannellum integration
     this.viewer = pannellum.viewer('panorama', {
       //Basic configuration
       default: {
         // "firstScene": "circle",
-        sceneFadeDuration: 1000,
         autoLoad: true,
         showControls: false,
       },
@@ -64,23 +67,25 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
 
       //Add panorama here when using only one 360 image
       //When using one panorama we don't need to use scenes
-      panorama: 'https://pannellum.org/images/bma-1.jpg',
-      //pitch and yaw are x and y coordinates
-      hotSpots: [
-        {
-          pitch: -20.1,
-          yaw: 140.9,
-          text: 'Spring House or Dairy',
-          // Custom hotspot icon and tooltip
+      // panorama: 'https://pannellum.org/images/bma-1.jpg',
+      // //pitch and yaw are x and y coordinates
+      // hotSpots: [
+      //   {
+      //     pitch: -20.1,
+      //     yaw: 140.9,
+      //     text: 'Spring House or Dairy',
+      //     // Custom hotspot icon and tooltip
 
-          // "cssClass": "custom-hotspot",
-          // "createTooltipFunc": hotspotFunc,
-          // "createTooltipArgs": "Baltimore Museum of Art"
-        },
-      ],
+      //     // "cssClass": "custom-hotspot",
+      //     // "createTooltipFunc": hotspotFunc,
+      //     // "createTooltipArgs": "Baltimore Museum of Art"
+      //   },
+      // ],
 
       //Scenes for using multiple 360 images and click on its hotspot to move to that 360 image
       //A scene is a 360 image
+      "scenes": [],
+      "hotSpots": [],
 
       // "scenes": {
       // In scenes object we add a screen, each scene will have its name i.e. circle, house
@@ -151,8 +156,51 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges) {
+    var scope = this;
+    if (!changes['marker'].firstChange) {
+      this.imgSer.getImagePointers().subscribe({
+        next: (res: any) => {
+          this.hotspotsList = res.map((a: any) => {
+            return a.payload.doc.data();
+          });
+        },
+        error: (err: any) => {
+          console.log(err);
+        },
+        complete: () => { },
+      });
+      this.store.ref(this.marker.url).getDownloadURL().subscribe({
+        next: (res: any) => {
+          this.viewer.addScene('newScene', {
+            "type": "equirectangular",
+            "panorama": res,
+            // "panorama": "https://pannellum.org/images/bma-1.jpg",
+          })
+          console.log(this.hotspotsList);
+          if (this.hotspotsList.length > 0) {
+            this.hotspotsList.map((hotspot: any) => {
+              if (hotspot.ImageId == this.marker.Id) {
+                this.viewer.addHotSpot({
+                  pitch: hotspot.Lat,
+                  yaw: hotspot.Long,
+                  text: hotspot.Title,
+                });
+              }
+            });
+          }
+          this.viewer.loadScene('newScene');
+        },
+        error: (err: any) => {
+          console.log(err);
+        },
+        complete: () => { },
+      })
+    }
+  }
 
   ngAfterViewInit() {
+    console.log(this.marker);
     var scope = this;
 
     //Picking cursor
@@ -188,8 +236,8 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
     this.imgSer.addImgPointer(this.form.getRawValue()).then(
       (res) => {
         console.log(res);
-         //Adding hotspot/marker in the current image
-         this.viewer.addHotSpot({
+        //Adding hotspot/marker in the current image
+        this.viewer.addHotSpot({
           pitch: this.form.controls.Lat.value,
           yaw: this.form.controls.Long.value,
           text: this.form.controls.Title.value,
@@ -221,7 +269,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit {
       error(err) {
         console.log(err);
       },
-      complete() {},
+      complete() { },
     });
   };
 }

@@ -10,7 +10,7 @@ import { MapViewerService } from 'src/services/map-viewer.service';
   styleUrls: ['./mapviewer.component.css'],
 })
 export class MapviewerComponent {
-  zoom: number = 8;
+  zoom: number = 0;
   map: any;
   showModal: boolean = false;
   // initial center position for the map
@@ -25,7 +25,7 @@ export class MapviewerComponent {
   constructor(
     private mapSer: MapViewerService,
     private imageServ: ImageViewerService
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.getImages();
   }
@@ -64,9 +64,8 @@ export class MapviewerComponent {
   }
 
   getImages = () => {
-    this.imageServ.getImages().subscribe({
+    this.mapSer.getMapPointers().subscribe({
       next: (res: any) => {
-        console.log(res);
         this.imagesList = res.map((a: any) => {
           const data = a.payload.doc.data();
           // data.Id = a.payload.doc.id;
@@ -79,11 +78,12 @@ export class MapviewerComponent {
       error: (err) => {
         console.error(err);
       },
-      complete: () => {},
+      complete: () => { },
     });
   };
   addImageMarkers = () => {
     var scope = this;
+    console.log(this.imagesList);
     this.imagesList.map((point: any) => {
       const icon = {
         url: '../../assets/360marker.png', // url
@@ -92,15 +92,20 @@ export class MapviewerComponent {
         anchor: new google.maps.Point(0, 0), // anchor
       };
       var marker = new google.maps.Marker({
-        title: point.Title,
+        title: point.Name,
         icon: icon,
         map: this.map,
-        position: new google.maps.LatLng(51.673858, 7.815982),
+        // position: new google.maps.LatLng(51.673858, 7.815982),
+        position: new google.maps.LatLng(point.lat, point.long),
       });
       marker.setCursor('pointer');
       google.maps.event.addListener(marker, 'click', function (e) {
         //Open image in panellum
-        scope.selectedMarker = marker;
+        console.log(point);
+        if (scope.selectedMarker != marker) {
+          scope.selectedMarker = point;
+          console.log("marker selected", scope.selectedMarker);
+        }
       });
       marker.setMap(this.map);
     });
