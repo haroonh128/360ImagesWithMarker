@@ -30,7 +30,7 @@ export class MapImagesComponent implements OnInit {
   constructor(
     private mapSer: MapViewerService,
     private store: AngularFireStorage
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getMapImage();
@@ -50,8 +50,8 @@ export class MapImagesComponent implements OnInit {
     );
   };
 
-  delMapImage = () => {
-    this.mapSer.deleteMapPointer(this.form.controls.Id.value?.toString()).then(
+  delMapImage = (id: any) => {
+    this.mapSer.deleteMapPointer(id).then(
       (res) => {
         console.log(res);
         this.getMapImage();
@@ -72,7 +72,7 @@ export class MapImagesComponent implements OnInit {
       error: (err: any) => {
         console.log(err);
       },
-      complete: () => {},
+      complete: () => { },
     });
   };
 
