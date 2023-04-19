@@ -1,11 +1,17 @@
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" (mapReady)="onMapReady($event)">
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" (mapReady)="onMapReady($event)"
+    [ngClass]="selectedMarker == null? '': 'd-none'">
     <div id="addImage" (click)="modalToggle()" class="add-image-icon cursor_pointer mr-2 mt-2" data-toggle="tooltip"
         data-placement="right" title="Add Image">
         <img src="../../assets/addimage.png" width="28" />
     </div>
 </agm-map>
 
-<div class="modal d-block" tabindex="-1" role="dialog" *ngIf="showModal">
+<div [ngClass]="selectedMarker != null? '': 'd-none'">
+    <app-imageviewer [marker]="selectedMarker" [mapViewer]="false"
+        (goBackEvent)="goBackEvent($event)"></app-imageviewer>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="showModal? 'd-block show' : 'hide'">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,54 +21,97 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="form">
+                <form [formGroup]="form" (ngSubmit)="addMapImage()">
                     <div class="row">
-                        <div class="col-12">
-                            Name
-                            <input class="form-control" formControlName="Name" />
+                        <div class="col-3">
+                            <span> Name</span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" name="Name" id="Name" formControlName="Name" class="form-control">
+                            <div *ngIf="f['Name'].touched && f['Name'].invalid">
+                                <div *ngIf="f['Name'].errors && f['Name'].errors['required']">
+                                    <span class="error">Name is Required</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            Description
-                            <input class="form-control" formControlName="Description" />
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <span>Description</span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" formControlName="Description" class="form-control">
+                            <div *ngIf="f['Description'].touched && f['Description'].invalid">
+                                <div *ngIf="f['Description'].errors && f['Description'].errors['required']">
+                                    <span class="error">Description is Required</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            Lattitude
-                            <input class="form-control" formControlName="Lattitude" />
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <span>Lat</span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" formControlName="lat" class="form-control">
+
+                            <div *ngIf="f['lat'].touched && f['lat'].invalid">
+                                <div *ngIf="f['lat'].errors && f['lat'].errors['required']">
+                                    <span class="error">Latitude is Required</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            Longitude
-                            <input class="form-control" formControlName="Longitude" />
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <span>Long</span>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" formControlName="long" class="form-control">
+                            <div *ngIf="f['long'].touched && f['long'].invalid">
+                                <div *ngIf="f['long'].errors && f['long'].errors['required']">
+                                    <span class="error">Longitude is Required</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            Image URL
-                            <input class="form-control" formControlName="url" />
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <span>Upload Image</span>
+                        </div>
+                        <div class="col-9">
+                            <!-- <div class="row">
+                                <div class="col-10"> -->
+                            <input type="file" (change)="onFileChanged($event)" formControlName="url"
+                                class="form-control">
+                            <!-- </div> -->
+                            <!-- <div class="col-2"><button (click)="uploadImage()" class="btn btn-secondary">Upload
+                                        Image</button></div>
+                            </div> -->
+                            <div *ngIf="f['url'].touched && f['url'].invalid">
+                                <div *ngIf="f['url'].errors && f['url'].errors['required']">
+                                    <span class="error">Image is Required</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <!-- <div class="col-6">
-                            <button type="submit" class="btn btn-success"></button>
-                        </div> -->
+                    <div class="row mt-3">
                         <div class="col-12">
-                            <button type="reset" class="btn btn-danger float-end">Clear</button>
+                            <button type="button" class="btn btn-secondary float-end" data-dismiss="modal"
+                                (click)="modalToggle()">Close</button>
+                            <button type="submit" class="btn btn-success me-2 float-end">Submit</button>
                         </div>
+
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
                 <button type="button" class="btn btn-primary" (click)="addImage()">Add Image</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                     (click)="modalToggle()">Close</button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

@@ -1,9 +1,13 @@
 <div id="panorama" [ngClass]="mapViewer? '': 'panorama'">
+    <div class="back-icon" data-toggle="tooltip" data-placement="right" title="Back" *ngIf="!mapViewer">
+        <img src="../../assets/backicon.png" (click)="goBack()" />
+    </div>
     <div id="controls">
-        <div class="ctrl" #zoomIn>&plus;</div>
-        <div class="ctrl" #zoomOut>&minus;</div>
-        <div class="ctrl" #fullScreen>&#x2922;</div>
-        <div class="ctrl" #addMarker *ngIf="!mapViewer">&#x2714;</div>
+        <div class="ctrl" #zoomIn data-toggle="tooltip" data-placement="right" title="Zoom In">&plus;</div>
+        <div class="ctrl" #zoomOut data-toggle="tooltip" data-placement="right" title="Zoom Out">&minus;</div>
+        <div class="ctrl" #fullScreen data-toggle="tooltip" data-placement="right" title="Toggle Screen">&#x2922;</div>
+        <div class="ctrl" #addMarker *ngIf="!mapViewer" data-toggle="tooltip" data-placement="right"
+            title="Add Marker on Image"><img class="w-50" src="../../assets/addhotspot.png" /></div>
     </div>
 </div>
 
@@ -46,4 +50,7 @@
             </div>
         </div>
     </div>
+</div>
+<div *ngIf="!mapViewer && isloading" class="cssload-container">
+    <div class="cssload-speeding-wheel"></div>
 </div>

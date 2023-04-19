@@ -10,7 +10,7 @@ import { MapViewerService } from 'src/services/map-viewer.service';
   styleUrls: ['./mapviewer.component.css'],
 })
 export class MapviewerComponent {
-  zoom: number = 0;
+  zoom: number = 2;
   map: any;
   showModal: boolean = false;
   // initial center position for the map
@@ -68,7 +68,7 @@ export class MapviewerComponent {
       next: (res: any) => {
         this.imagesList = res.map((a: any) => {
           const data = a.payload.doc.data();
-          // data.Id = a.payload.doc.id;
+          data.Id = a.payload.doc.id;
           return data;
         });
         if (this.imagesList.length > 0) {
@@ -95,14 +95,12 @@ export class MapviewerComponent {
         title: point.Name,
         icon: icon,
         map: this.map,
-        // position: new google.maps.LatLng(51.673858, 7.815982),
         position: new google.maps.LatLng(point.lat, point.long),
       });
       marker.setCursor('pointer');
       google.maps.event.addListener(marker, 'click', function (e) {
         //Open image in panellum
-        console.log(point);
-        if (scope.selectedMarker != marker) {
+        if (scope.selectedMarker != point) {
           scope.selectedMarker = point;
           console.log("marker selected", scope.selectedMarker);
         }
