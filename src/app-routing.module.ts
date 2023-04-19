@@ -8,7 +8,7 @@ import { AdminmapviewerComponent } from './components/adminmapviewer/adminmapvie
 import { MapImagesComponent } from './components/map-images/map-images.component';
 
 const routes: Routes = [
-  { path: '', component: RegisterComponent },
+  { path: '', component: MapviewerComponent },
   { path: 'adminmapviewer', component: AdminmapviewerComponent },
   { path: 'registerLogin', component: RegisterComponent },
   { path: 'users', component: UsersComponent },

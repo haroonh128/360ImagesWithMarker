@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit {
           localStorage.setItem('user', user);
           localStorage.setItem('uid', user.uid);
           this.toastr.success('LoggedIn successfully.');
-          this.route.navigate(['users']);
+          this.route.navigate(['adminmapviewer']);
         },
         (err) => {
           console.error(err);

@@ -13,7 +13,6 @@ export class MapImagesComponent implements OnInit {
   imgList: any = [];
 
   form = new FormGroup({
-    Id: new FormControl(UUID.UUID()),
     Name: new FormControl('', [Validators.required]),
     Description: new FormControl('', [Validators.required]),
     lat: new FormControl('', [Validators.required]),
@@ -30,7 +29,7 @@ export class MapImagesComponent implements OnInit {
   constructor(
     private mapSer: MapViewerService,
     private store: AngularFireStorage
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getMapImage();
@@ -66,18 +65,21 @@ export class MapImagesComponent implements OnInit {
     this.mapSer.getMapPointers().subscribe({
       next: (res: any) => {
         this.imgList = res.map((a: any) => {
-          return a.payload.doc.data();
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
         });
+        console.log(this.imgList);
       },
+
       error: (err: any) => {
         console.log(err);
       },
-      complete: () => { },
+      complete: () => {},
     });
   };
 
   uploadFile = async () => {
-    //let path = `/files${Math.random()}${this.image}`;
     let result = await this.store.upload(`${this.image.name}`, this.image);
     const url = await result.ref.getDownloadURL();
   };

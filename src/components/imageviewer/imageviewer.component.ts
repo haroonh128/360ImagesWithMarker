@@ -27,7 +27,6 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('fullScreen') fullScreen: ElementRef | undefined;
   showModal: boolean = false;
   form = new FormGroup({
-    Id: new FormControl(''),
     Title: new FormControl('', [Validators.required]),
     Description: new FormControl('', [Validators.required]),
     Lat: new FormControl(''),
@@ -39,9 +38,12 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
     UserId: new FormControl(''),
   });
   hotspotsList: any = [];
+  imageViewerList: any = [];
 
-  constructor(private imgSer: ImageViewerService,
-    private store: AngularFireStorage) { }
+  constructor(
+    private imgSer: ImageViewerService,
+    private store: AngularFireStorage
+  ) {}
 
   //For setting mouse position on mousedown
   mousePosition = {
@@ -84,8 +86,8 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
 
       //Scenes for using multiple 360 images and click on its hotspot to move to that 360 image
       //A scene is a 360 image
-      "scenes": [],
-      "hotSpots": [],
+      scenes: [],
+      hotSpots: [],
 
       // "scenes": {
       // In scenes object we add a screen, each scene will have its name i.e. circle, house
@@ -168,34 +170,36 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
         error: (err: any) => {
           console.log(err);
         },
-        complete: () => { },
+        complete: () => {},
       });
-      this.store.ref(this.marker.url).getDownloadURL().subscribe({
-        next: (res: any) => {
-          this.viewer.addScene('newScene', {
-            "type": "equirectangular",
-            "panorama": res,
-            // "panorama": "https://pannellum.org/images/bma-1.jpg",
-          })
-          console.log(this.hotspotsList);
-          if (this.hotspotsList.length > 0) {
-            this.hotspotsList.map((hotspot: any) => {
-              if (hotspot.ImageId == this.marker.Id) {
+      this.store
+        .ref(this.marker.url)
+        .getDownloadURL()
+        .subscribe({
+          next: (res: any) => {
+            this.viewer.addScene('newScene', {
+              type: 'equirectangular',
+              panorama: res,
+            });
+            console.log(this.hotspotsList);
+            if (this.hotspotsList.length > 0) {
+              this.hotspotsList.map((hotspot: any) => {
+                //if (hotspot.ImageId == this.marker.Id) {
                 this.viewer.addHotSpot({
                   pitch: hotspot.Lat,
                   yaw: hotspot.Long,
                   text: hotspot.Title,
                 });
-              }
-            });
-          }
-          this.viewer.loadScene('newScene');
-        },
-        error: (err: any) => {
-          console.log(err);
-        },
-        complete: () => { },
-      })
+                //}
+              });
+            }
+            this.viewer.loadScene('newScene');
+          },
+          error: (err: any) => {
+            console.log(err);
+          },
+          complete: () => {},
+        });
     }
   }
 
@@ -228,7 +232,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
 
   modalToggle = () => {
     this.showModal = !this.showModal;
-  }
+  };
 
   addPointerToImage = () => {
     this.form.controls.CreatedBy.setValue(Date.now().toString());
@@ -251,7 +255,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
   };
 
   delImageViewer = () => {
-    this.imgSer.deleteImgPointer(this.form.controls.Id.value?.toString()).then(
+    this.imgSer.deleteImgPointer().then(
       (res) => {
         console.log(res);
       },
@@ -263,13 +267,17 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
 
   getImagePointers = () => {
     this.imgSer.getImagePointers().subscribe({
-      next(value) {
-        console.log(value);
+      next: (value: any) => {
+        this.imageViewerList = value.map((a: any) => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
       },
-      error(err) {
+      error: (err) => {
         console.log(err);
       },
-      complete() { },
+      complete: () => {},
     });
   };
 }
