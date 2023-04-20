@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ImageViewerService } from 'src/services/image-viewer.service';
 import { MapViewerService } from 'src/services/map-viewer.service';
 import { ToastrService } from 'ngx-toastr';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-adminmapviewer',
@@ -11,20 +12,23 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./adminmapviewer.component.css']
 })
 export class AdminmapviewerComponent implements OnInit {
+
   form = new FormGroup({
-    Id: new FormControl(UUID.UUID()),
-    Name: new FormControl(''),
-    Description: new FormControl(''),
-    ImageId: new FormControl(''),
-    Lattitude: new FormControl(''),
-    Longitude: new FormControl(''),
+    Name: new FormControl('', [Validators.required]),
+    Description: new FormControl('', [Validators.required]),
+    lat: new FormControl('', [Validators.required]),
+    long: new FormControl('', [Validators.required]),
     IsDeleted: new FormControl(false),
     CreatedBy: new FormControl(''),
     ModifiedBy: new FormControl(''),
-    url: new FormControl(''),
+    userId: new FormControl(''),
+    url: new FormControl('', [Validators.required]),
   });
+  
+  image: any;
 
-  zoom: number = 0;
+
+  zoom: number = 2;
   map: any;
   viewer: any = null;
   showModal: boolean = false;
@@ -33,23 +37,24 @@ export class AdminmapviewerComponent implements OnInit {
   lng: number = 0;
   imagesList: any = [];
   selectedMarker: any = null;
-  constructor(private mapSer: MapViewerService, private imageServ: ImageViewerService,
-    private toastr: ToastrService,) { }
+  constructor(private mapSer: MapViewerService, 
+    private imageServ: ImageViewerService,
+    private toastr: ToastrService,
+    private store: AngularFireStorage) { }
   ngOnInit(): void {
-    this.getImages();
+    this.getMapImages();
   }
 
-  getImages = () => {
-    this.imageServ.getImages().subscribe({
+  getMapImages = () => {
+    this.mapSer.getMapPointers ().subscribe({
       next: (res: any) => {
-        console.log(res);
         this.imagesList = res.map((a: any) => {
           const data = a.payload.doc.data();
-          // data.Id = a.payload.doc.id;
+          data.Id = a.payload.doc.id;
           return data;
         });
         if (this.imagesList.length > 0) {
-          this.addImagesToMap()
+          this.addImageMarkersOnMap()
         }
       },
       error: (err) => {
@@ -63,7 +68,6 @@ export class AdminmapviewerComponent implements OnInit {
   addImage(){
     this.imageServ.addImage(this.form.getRawValue()).then(
       (res) => {
-        console.log(res);
         this.modalToggle();
       },
       (err) => {
@@ -79,7 +83,7 @@ export class AdminmapviewerComponent implements OnInit {
       mapTypeControl: true,
       mapTypeControlOptions: {
         style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.BOTTOM_LEFT,
+        position: google.maps.ControlPosition.TOP_LEFT,
       },
       zoomControl: true,
       scrollwheel: true,
@@ -111,7 +115,6 @@ export class AdminmapviewerComponent implements OnInit {
       position: myLatlng,
     });
     this.map.addListener("click", (event: any) => {
-      console.log(event.latLng.toJSON());
       infoWindow.close();
       infoWindow = new google.maps.InfoWindow({
         position: event.latLng,
@@ -123,7 +126,7 @@ export class AdminmapviewerComponent implements OnInit {
     });
     this.map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('addImage'));
   }
-  addImagesToMap = () => {
+  addImageMarkersOnMap = () => {
     var scope = this;
     this.imagesList.map((point: any) => {
       const icon = {
@@ -133,62 +136,60 @@ export class AdminmapviewerComponent implements OnInit {
         anchor: new google.maps.Point(0, 0) // anchor
       };
       var marker = new google.maps.Marker({
-        title: point.Title,
+        title: point.Name,
         icon: icon,
         map: this.map,
-        position: new google.maps.LatLng(
-          51.673858, 7.815982
-        ),
+        position: new google.maps.LatLng(point.lat, point.long),
       });
       marker.setCursor('pointer');
       google.maps.event.addListener(marker, 'click', function (e) {
         //Open image in panellum
-        scope.selectedMarker = marker;
+        if (scope.selectedMarker != point) {
+          scope.selectedMarker = point;
+        }
+
       });
       marker.setMap(this.map);
     })
   }
 
-  addMapImage = () => {
-    this.form.controls.CreatedBy.setValue(Date.now().toString());
-
-    this.mapSer.addMapPointer(this.form.getRawValue()).then(
-      (res) => {
-        console.log(res);
-        //Adding hotspot/marker in the current image
-       
-        this.modalToggle();
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  };
-
-  delMapImage = () => {
-    this.mapSer.deleteMapPointer(this.form.controls.Id.value?.toString()).then(
-      (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  };
-
-  getMapImage = () => {
-    this.mapSer.getMap().subscribe({
-      next(value) {
-        console.log(value);
-      },
-      error(err) {
-        console.log(err);
-      },
-      complete() { },
-    });
-  };
-
   modalToggle = () => {
     this.showModal = !this.showModal;
   };
+
+  addMapImage = () => {
+    this.form.controls.CreatedBy.setValue(Date.now().toString());
+    this.form.controls.userId.setValue(localStorage.getItem('uid'));
+    this.uploadFile();
+    this.mapSer.addMapPointer(this.form.getRawValue()).then(
+      (res) => {
+        this.modalToggle();
+        this.selectedMarker = {...this.form.getRawValue(), Id: res.id};
+        this.form.reset();
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  };
+
+  
+  uploadFile = async () => {
+    let result = await this.store.upload(`${this.image.name}`, this.image);
+    const url = await result.ref.getDownloadURL();
+  };
+
+  get f() {
+    return this.form.controls;
+  }
+
+  onFileChanged = (event: any) => {
+    this.image = event.target.files[0];
+    let imgName = this.image.name.toString();
+    this.form.controls.url.setValue(imgName);
+  };
+
+  goBackEvent(event: any) {
+    this.selectedMarker = null;
+  }
 }
