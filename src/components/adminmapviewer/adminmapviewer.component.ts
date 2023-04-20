@@ -68,7 +68,6 @@ export class AdminmapviewerComponent implements OnInit {
   addImage(){
     this.imageServ.addImage(this.form.getRawValue()).then(
       (res) => {
-        console.log(res);
         this.modalToggle();
       },
       (err) => {

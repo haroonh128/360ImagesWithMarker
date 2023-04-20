@@ -99,9 +99,16 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   removeHotSpots = () => {
-    this.hotspotIds.forEach((id: any) => {
-      this.viewer.removeHotSpot(id);
-    });
+    let hotSpots = document.getElementsByClassName('custom-hotspot');
+    if (hotSpots.length > 0) {
+      for (let i = 1; i <= hotSpots.length; i++) {
+        hotSpots[i - 1].remove();
+      }
+    }
+    // this.hotspotIds.forEach((id: any) => {
+    //   this.viewer.removeHotSpot(id);
+    //   document.getElementById(id)?.remove();
+    // });
     this.hotspotIds = [];
   }
 
@@ -121,24 +128,24 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
         complete: () => { },
       });
       if (this.marker != null && this.marker.url != null) {
+        if(this.mapViewer) this.removeHotSpots();
         this.store
           .ref(this.marker.url)
           .getDownloadURL()
           .subscribe({
-            next:async (res: any) => {
+            next: async (res: any) => {
               this.newSceneId = this.marker.Name;
               this.viewer.addScene(this.newSceneId, {
                 type: 'equirectangular',
                 panorama: res,
               });
-              await this.viewer.loadScene(this.newSceneId);    
-              await this.loadSceneData();         
+              await this.viewer.loadScene(this.newSceneId);
+              await this.loadSceneData();
             },
             error: (err: any) => {
               console.log(err);
             },
             complete: () => {
-              console.log('complete');
             },
           });
       }
@@ -153,7 +160,11 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
             id: hotspot.Title,
             pitch: hotspot.Lat,
             yaw: hotspot.Long,
-            text: hotspot.Title
+            text: hotspot.Title,
+            createTooltipFunc: this.hotspot,
+            createTooltipArgs: hotspot,
+            cssClass: 'custom-hotspot'
+
           });
           this.hotspotIds.push(hotspot.Title);
         }
@@ -165,6 +176,20 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
     this.viewer.removeScene(this.previousSceneId);
     this.isloading = false;
   }
+
+
+  // Hot spot creation function
+  hotspot = (hotSpotDiv: any, args: any) => {
+    hotSpotDiv.classList.add('custom-tooltip');
+    var span = document.createElement('span');
+    span.setAttribute("id", args.Title);
+    span.innerHTML = args.Title + "</br>" + args.Description;
+    hotSpotDiv.appendChild(span);
+    span.style.width = span.scrollWidth - 20 + 'px';
+    span.style.marginLeft = -(span.scrollWidth - hotSpotDiv.offsetWidth) / 2 - 14 + 'px';
+    span.style.marginTop = -span.scrollHeight - 12 + 'px';
+  }
+
 
   ngAfterViewInit() {
     var scope = this;

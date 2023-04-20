@@ -2,10 +2,6 @@
     <div [ngClass]="selectedMarker != null? 'col-4': 'col-12'">
         <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false"
             (mapReady)="onMapReady($event)">
-            <!-- <agm-marker *ngFor="let m of markers; let i = index" (markerClick)="clickedMarker(m.label, i)" [latitude]="m.lat"
-        [longitude]="m.lng" [label]="m.label" [markerDraggable]="m.draggable">
-
-    </agm-marker> -->
         </agm-map>
     </div>
     <div [ngClass]="selectedMarker != null? 'col-8': 'd-none'">

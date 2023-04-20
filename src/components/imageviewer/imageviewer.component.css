@@ -2,6 +2,7 @@
 	width: 100vw;
 	height: 100vh;
 }
+
 #controls {
     position: absolute;
     bottom: 0;
@@ -101,4 +102,3 @@
       transform: rotate(360deg);
     }
   }
-  

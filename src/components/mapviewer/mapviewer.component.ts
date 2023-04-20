@@ -18,9 +18,6 @@ export class MapviewerComponent {
   lng: number = 0;
   imagesList: any = [];
   selectedMarker: any = null;
-  clickedMarker(label: string, index: number) {
-    console.log(`clicked the marker: ${label || index}`);
-  }
 
   constructor(
     private mapSer: MapViewerService,
@@ -83,7 +80,6 @@ export class MapviewerComponent {
   };
   addImageMarkers = () => {
     var scope = this;
-    console.log(this.imagesList);
     this.imagesList.map((point: any) => {
       const icon = {
         url: '../../assets/360marker.png', // url
@@ -102,7 +98,6 @@ export class MapviewerComponent {
         //Open image in panellum
         if (scope.selectedMarker != point) {
           scope.selectedMarker = point;
-          console.log("marker selected", scope.selectedMarker);
         }
       });
       marker.setMap(this.map);
