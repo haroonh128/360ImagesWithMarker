@@ -128,6 +128,7 @@ export class ImageviewerComponent implements OnInit, AfterViewInit, OnChanges {
         complete: () => { },
       });
       if (this.marker != null && this.marker.url != null) {
+        console.log(this.marker);
         if(this.mapViewer) this.removeHotSpots();
         this.store
           .ref(this.marker.url)

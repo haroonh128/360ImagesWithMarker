@@ -23,11 +23,11 @@ export class MapviewerComponent {
   searchText: string = '';
 
   selectedMarker: any = null;
-
+  markers: any = [];
   constructor(
     private mapSer: MapViewerService,
     private imageServ: ImageViewerService
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.getImages();
   }
@@ -37,8 +37,8 @@ export class MapviewerComponent {
       mapTypeId: 'roadmap',
       mapTypeControl: true,
       mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.TOP_LEFT,
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        position: google.maps.ControlPosition.LEFT_CENTER,
       },
       zoomControl: true,
       scrollwheel: true,
@@ -80,7 +80,7 @@ export class MapviewerComponent {
       error: (err) => {
         console.error(err);
       },
-      complete: () => {},
+      complete: () => { },
     });
   };
   addImageMarkers = () => {
@@ -98,6 +98,7 @@ export class MapviewerComponent {
         map: this.map,
         position: new google.maps.LatLng(point.lat, point.long),
       });
+      this.markers.push(marker);
       marker.setCursor('pointer');
       google.maps.event.addListener(marker, 'click', function (e) {
         //Open image in panellum
@@ -108,11 +109,24 @@ export class MapviewerComponent {
       marker.setMap(this.map);
     });
   };
+  searchSelection = (marker: any) => {
+    if (this.selectedMarker != marker) {
+      this.selectedMarker = marker;
+    }
+  }
+
+  clearMarkers = () => {
+    this.markers.forEach((marker: any) => {
+      marker.setMap(null);
+    })
+    this.markers = [];
+  }
 
   searchImages = (search: string) => {
     if (search.length > 1) {
-      this.mapSer.getImages().subscribe({
+      this.mapSer.getMapPointers().subscribe({
         next: (res: any) => {
+          this.searchList = [];
           this.imagesList = res.map((a: any) => {
             const data = a.payload.doc.data();
             data.Id = a.payload.doc.id;
@@ -120,18 +134,24 @@ export class MapviewerComponent {
           });
           if (this.imagesList.length > 0) {
             for (var i = 0; i < this.imagesList.length; i++) {
-              let title = this.imagesList[i].Title.toLowerCase();
+              let title = this.imagesList[i].Name.toLowerCase();
               if (title.includes(search.toLowerCase())) {
                 this.searchList.push(this.imagesList[i]);
               }
             }
+            this.clearMarkers();
+            this.imagesList = this.searchList;
+            this.addImageMarkers();
           }
         },
         error: (err) => {
           console.error(err);
         },
-        complete: () => {},
+        complete: () => { },
       });
+    } else if(search.length == 0){
+      this.clearMarkers();
+      this.getImages();
     }
   };
 }
