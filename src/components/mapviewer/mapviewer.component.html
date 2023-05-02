@@ -1,10 +1,25 @@
 <div class="d-flex">
-    <div [ngClass]="selectedMarker != null? 'col-4': 'col-12'">
+    <!-- <div [ngClass]="selectedMarker != null? 'col-4': 'col-12'"> -->
+    <div class="col-2">
+        <form class="form-inline md-form form-sm">
+            <div class="search-hero">
+                <input class="form-control" type="text" name="search" (keyup)="searchImages(searchText)"
+                    [(ngModel)]="searchText" autocomplete="on" placeholder="&#61442;">
+                <div *ngFor="let i of searchList;">
+
+                    <div class="imgTitle"> <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        {{i.Title}}</div>
+                </div>
+            </div>
+
+        </form>
+
         <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false"
             (mapReady)="onMapReady($event)">
         </agm-map>
     </div>
-    <div [ngClass]="selectedMarker != null? 'col-8': 'd-none'">
+    <!-- <div [ngClass]="selectedMarker != null? 'col-8': 'd-none'"> -->
+    <div class="col-10">
         <app-imageviewer [marker]="selectedMarker" [mapViewer]="true"></app-imageviewer>
     </div>
 </div>

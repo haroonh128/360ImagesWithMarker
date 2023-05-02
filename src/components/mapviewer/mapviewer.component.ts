@@ -17,12 +17,17 @@ export class MapviewerComponent {
   lat: number = 0;
   lng: number = 0;
   imagesList: any = [];
+  searchList: any = [];
+
+  //string
+  searchText: string = '';
+
   selectedMarker: any = null;
 
   constructor(
     private mapSer: MapViewerService,
     private imageServ: ImageViewerService
-  ) { }
+  ) {}
   ngOnInit(): void {
     this.getImages();
   }
@@ -75,7 +80,7 @@ export class MapviewerComponent {
       error: (err) => {
         console.error(err);
       },
-      complete: () => { },
+      complete: () => {},
     });
   };
   addImageMarkers = () => {
@@ -102,6 +107,32 @@ export class MapviewerComponent {
       });
       marker.setMap(this.map);
     });
+  };
+
+  searchImages = (search: string) => {
+    if (search.length > 1) {
+      this.mapSer.getImages().subscribe({
+        next: (res: any) => {
+          this.imagesList = res.map((a: any) => {
+            const data = a.payload.doc.data();
+            data.Id = a.payload.doc.id;
+            return data;
+          });
+          if (this.imagesList.length > 0) {
+            for (var i = 0; i < this.imagesList.length; i++) {
+              let title = this.imagesList[i].Title.toLowerCase();
+              if (title.includes(search.toLowerCase())) {
+                this.searchList.push(this.imagesList[i]);
+              }
+            }
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        },
+        complete: () => {},
+      });
+    }
   };
 }
 

@@ -30,4 +30,8 @@ export class MapViewerService {
   getMap = () => {
     return this.afs.collection('/MapViewer').snapshotChanges();
   };
+
+  getImages = () => {
+    return this.afs.collection(`/ImageViewer`).snapshotChanges();
+  };
 }

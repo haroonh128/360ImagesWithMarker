@@ -1,6 +1,32 @@
-
 agm-map {
-    height: 100vh;
-    /* width: 30vw; */
-  }
-  
+  height: 100vh;
+  /* width: 30vw; */
+}
+
+
+
+
+.container {
+  padding-top: 50px;
+  padding-bottom: 10px;
+  color: #405065;
+}
+
+.search-hero {
+  max-width: 500px;
+  padding-bottom: 50px;
+  margin: auto;
+}
+
+.form-control {
+  box-shadow: 0 10px 40px 0 #B0C1D9;
+}
+
+.form-control::placeholder {
+  font-family: FontAwesome;
+}
+
+.imgTitle {
+  font-family: 'FontAwesome';
+  margin: 2px 10px 2px 15px;
+}
