@@ -1,4 +1,6 @@
 <div id="panorama" [ngClass]="mapViewer? '': 'panorama'">
+    <!-- <i class="fa fa-map-marker" aria-hidden="true"></i> -->
+    <img class="tag" src="/assets/images.jpeg">
     <div class="back-icon" data-toggle="tooltip" data-placement="right" title="Back" *ngIf="!mapViewer">
         <img src="../../assets/backicon.png" (click)="goBack()" />
     </div>

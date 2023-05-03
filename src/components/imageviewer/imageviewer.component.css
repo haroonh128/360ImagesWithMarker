@@ -1,104 +1,116 @@
-.panorama {    
-	width: 100vw;
-	height: 100vh;
+.panorama {
+  width: 100vw;
+  height: 100vh;
 }
 
 #controls {
-    position: absolute;
-    bottom: 0;
-    z-index: 2;
-    text-align: center;
-    width: 100%;
-    padding-bottom: 3px;
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  padding-bottom: 3px;
 }
+
 .ctrl {
-    padding: 8px 5px;
-    width: 30px;
-    text-align: center;
-    background: rgba(200, 200, 200, 0.8);
-    display: inline-block;
-    cursor: pointer;
+  padding: 8px 5px;
+  width: 30px;
+  text-align: center;
+  background: rgba(200, 200, 200, 0.8);
+  display: inline-block;
+  cursor: pointer;
 }
+
 .ctrl:hover {
-    background: rgba(200, 200, 200, 1);
+  background: rgba(200, 200, 200, 1);
 }
+
 .back-icon {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    z-index: 2;
-    width: 100%;
-    padding-bottom: 3px;
-    padding: 3px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  padding-bottom: 3px;
+  padding: 3px;
 }
+
 .back-icon img {
-    width: 40px;
+  width: 40px;
 }
 
 
 /* spinner */
 .cssload-container {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 1);
-    z-index: 9999;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 9999;
+}
+
+.cssload-speeding-wheel {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 48%;
+  top: 40%;
+  width: 63px;
+  height: 63px;
+  margin: 0 auto;
+  border: 4px solid rgb(0, 0, 0);
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  animation: cssload-spin 500ms infinite linear;
+  -o-animation: cssload-spin 500ms infinite linear;
+  -ms-animation: cssload-spin 500ms infinite linear;
+  -webkit-animation: cssload-spin 500ms infinite linear;
+  -moz-animation: cssload-spin 500ms infinite linear;
+}
+
+@keyframes cssload-spin {
+  100% {
+    transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  .cssload-speeding-wheel {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 48%;
-    top: 40%;
-    width: 63px;
-    height: 63px;
-    margin: 0 auto;
-    border: 4px solid rgb(0, 0, 0);
-    border-radius: 50%;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    animation: cssload-spin 500ms infinite linear;
-    -o-animation: cssload-spin 500ms infinite linear;
-    -ms-animation: cssload-spin 500ms infinite linear;
-    -webkit-animation: cssload-spin 500ms infinite linear;
-    -moz-animation: cssload-spin 500ms infinite linear;
+}
+
+@-o-keyframes cssload-spin {
+  100% {
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  @keyframes cssload-spin {
-    100% {
-      transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
+}
+
+@-ms-keyframes cssload-spin {
+  100% {
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  @-o-keyframes cssload-spin {
-    100% {
-      -o-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
+}
+
+@-webkit-keyframes cssload-spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  @-ms-keyframes cssload-spin {
-    100% {
-      -ms-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
+}
+
+@-moz-keyframes cssload-spin {
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  @-webkit-keyframes cssload-spin {
-    100% {
-      -webkit-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
-  }
-  
-  @-moz-keyframes cssload-spin {
-    100% {
-      -moz-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
-  }
+}
+
+.tag {
+  z-index: 9999999;
+  position: absolute;
+  right: 55px;
+  top: 50px;
+  width: 40px;
+}
